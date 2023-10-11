@@ -4,7 +4,7 @@
 int counter = 0;
 bool buttonPressed = false;
 bool toggle1 = 0;
-int ledPin = PIN_A11;
+int ledPin = 13;
 
 void pin_ISR() {
 
@@ -85,6 +85,7 @@ void loop() {
 
   }
 
+
   counter = 0;
 
   while(counter <= 48) {
@@ -107,11 +108,51 @@ void loop() {
 
   }
 
+  digitalWrite(PIN_A12, LOW);
   ledPin = 13;
   counter = 0;
 
 
+  while(counter <= 40) {
+
+    if(counter <= 2) {
+
+      ledPin = 13;
+
+      digitalWrite(PIN_A10, HIGH);
+
+    }
+
+    if(counter >= 34 && ledPin == 13) {
+
+      Serial.println(counter);
+
+      ledPin = PIN_A10;
+
+    }
+
+  }
+
+  digitalWrite(PIN_A10, LOW);
+  ledPin = 13;
+  counter = 0;
 
 
+  while(counter <= 6) {
+
+    if(counter <= 2) {
+
+      ledPin = 13;
+
+      digitalWrite(PIN_A11, HIGH);
+
+    }
+
+    Serial.println(counter);
+    
+  }
+
+  digitalWrite(PIN_A11, LOW);
+  ledPin = 13;
 
 }
