@@ -15,6 +15,7 @@ void pin_ISR() {
 void setup() {
   Serial.begin(9600);
   //Initialize pins
+  pinMode(PIN_A8, OUTPUT);
   pinMode(PIN_A9, INPUT);
   pinMode(PIN_A10, OUTPUT);
   pinMode(PIN_A11, OUTPUT);
@@ -104,10 +105,13 @@ void loop() {
 
       ledPin = PIN_A12;
 
+      //digitalWrite(PIN_A8, HIGH);
+
     }
 
   }
 
+  //digitalWrite(PIN_A8, LOW);
   digitalWrite(PIN_A12, LOW);
   ledPin = 13;
   counter = 0;
@@ -123,7 +127,7 @@ void loop() {
 
     }
 
-    if(counter >= 34 && ledPin == 13) {
+    if(counter >= 33 && ledPin == 13) {
 
       Serial.println(counter);
 
@@ -149,7 +153,7 @@ void loop() {
     }
 
     Serial.println(counter);
-    
+
   }
 
   digitalWrite(PIN_A11, LOW);
