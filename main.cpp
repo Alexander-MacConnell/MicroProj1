@@ -46,6 +46,12 @@ ISR(TIMER1_COMPA_vect) { //timer1 interrupt 1Hz
 
     digitalWrite(ledPin, HIGH);
 
+    if(ledPin != 13) {
+
+      digitalWrite(PIN_A8, HIGH);
+
+    }
+
     toggle1 = 0;
     counter++;
 
@@ -54,6 +60,12 @@ ISR(TIMER1_COMPA_vect) { //timer1 interrupt 1Hz
   else if (toggle1 == 0) {
 
     digitalWrite(ledPin, LOW);
+
+    if(ledPin != 13) {
+
+      digitalWrite(PIN_A8, LOW);
+
+    }
 
     toggle1 = 1;
     counter++;
@@ -105,13 +117,11 @@ void loop() {
 
       ledPin = PIN_A12;
 
-      //digitalWrite(PIN_A8, HIGH);
-
     }
 
   }
 
-  //digitalWrite(PIN_A8, LOW);
+  digitalWrite(PIN_A8, LOW);
   digitalWrite(PIN_A12, LOW);
   ledPin = 13;
   counter = 0;
@@ -127,7 +137,7 @@ void loop() {
 
     }
 
-    if(counter >= 33 && ledPin == 13) {
+    if(counter >= 34 && ledPin == 13) {
 
       Serial.println(counter);
 
@@ -137,6 +147,7 @@ void loop() {
 
   }
 
+  digitalWrite(PIN_A8, LOW);
   digitalWrite(PIN_A10, LOW);
   ledPin = 13;
   counter = 0;
@@ -146,7 +157,7 @@ void loop() {
 
     if(counter <= 2) {
 
-      ledPin = 13;
+      ledPin = 14;
 
       digitalWrite(PIN_A11, HIGH);
 
@@ -156,6 +167,7 @@ void loop() {
 
   }
 
+  digitalWrite(PIN_A8, LOW);
   digitalWrite(PIN_A11, LOW);
   ledPin = 13;
 
