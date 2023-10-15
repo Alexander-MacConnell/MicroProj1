@@ -1,3 +1,7 @@
+// Micro 2 Project 1
+// Group 3: Alexander MacConnell, Andrew Woods, Omar Said
+
+
 #include <Arduino.h>
 
 
@@ -6,41 +10,38 @@ bool buttonPressed = false;
 bool toggle1 = 0;
 int ledPin = 13;
 
-void pin_ISR() {
+void buttonFunc() {
 
   buttonPressed = true;
 
 }
 
 void setup() {
+
   Serial.begin(9600);
-  //Initialize pins
-  pinMode(PIN_A8, OUTPUT);
-  pinMode(PIN_A9, INPUT);
-  pinMode(PIN_A10, OUTPUT);
-  pinMode(PIN_A11, OUTPUT);
-  pinMode(PIN_A12, OUTPUT);
 
-  attachInterrupt(0, pin_ISR, CHANGE);
+  // Initialize pins
+  pinMode(PIN_A8, OUTPUT); // Buzzer
+  pinMode(PIN_A10, OUTPUT); // Green LED
+  pinMode(PIN_A11, OUTPUT); // Yellow LED
+  pinMode(PIN_A12, OUTPUT); // Red LED
 
-  //set timer1 interrupt at 1Hz
-  TCCR1A = 0;// set entire TCCR1A register to 0
-  TCCR1B = 0;// same for TCCR1B
-  TCNT1  = 0;//initialize counter value to 0
-  // set compare match register for 1hz increments
-  OCR1A = 7812;// = (16*10^6) / (1*1024) - 1 (must be <65536)
-  // turn on CTC mode
+  attachInterrupt(0, buttonFunc, CHANGE); // Attach interrupt to button
+
+  // Set up timer1 for 2Hz interrupt, adapted from code provided in specification document
+  TCCR1A = 0;
+  TCCR1B = 0;
+  TCNT1  = 0;
+  OCR1A = 7812; // Changed from 15624 to 7812 for 2Hz
   TCCR1B |= (1 << WGM12);
-  // Set CS12 and CS10 bits for 1024 prescaler
   TCCR1B |= (1 << CS12) | (1 << CS10);  
-  // enable timer compare interrupt
   TIMSK1 |= (1 << OCIE1A);
-
-  sei();//allow interrupts
+  sei();
 
 }
 
-ISR(TIMER1_COMPA_vect) { //timer1 interrupt 1Hz
+// Interrupt timer, counter, and toggle for LEDs and buzzer
+ISR(TIMER1_COMPA_vect) {
 
   if (toggle1 == 1) {
 
@@ -76,15 +77,16 @@ ISR(TIMER1_COMPA_vect) { //timer1 interrupt 1Hz
 
 void loop() {
   
+  // Flash red LED 1Hz until button is pressed
   while(buttonPressed == false){
     
-    if(counter == 0){
+    if(counter == 0){ // LED on for 1 second
 
       digitalWrite(PIN_A12, HIGH);
 
     }
 
-    else if(counter == 2){
+    else if(counter == 2){ // LED off for 1 second
 
       digitalWrite(PIN_A12, LOW);
 
@@ -99,11 +101,11 @@ void loop() {
   }
 
 
-  counter = 0;
+  counter = 0; // Reset counter
 
   while(counter <= 48) {
 
-    if(counter <= 2) {
+    if(counter <= 2) {  // Turn on red LED for 21 seconds
 
       ledPin = 13;
 
@@ -111,7 +113,7 @@ void loop() {
 
     }
 
-    if(counter >= 42 && ledPin == 13) {
+    if(counter >= 42 && ledPin == 13) { // Flash red LED and beep buzzer for 3 seconds
 
       Serial.println(counter);
 
@@ -121,15 +123,15 @@ void loop() {
 
   }
 
-  digitalWrite(PIN_A8, LOW);
-  digitalWrite(PIN_A12, LOW);
-  ledPin = 13;
-  counter = 0;
+  digitalWrite(PIN_A8, LOW); // Turn off buzzer
+  digitalWrite(PIN_A12, LOW); // Turn off red LED
+  ledPin = 13; // Reset ledPin
+  counter = 0; // Reset counter
 
 
   while(counter <= 40) {
 
-    if(counter <= 2) {
+    if(counter <= 2) { // Turn on green LED for 17 seconds
 
       ledPin = 13;
 
@@ -137,7 +139,7 @@ void loop() {
 
     }
 
-    if(counter >= 34 && ledPin == 13) {
+    if(counter >= 34 && ledPin == 13) { // Flash green LED and beep buzzer for 3 seconds
 
       Serial.println(counter);
 
@@ -147,15 +149,15 @@ void loop() {
 
   }
 
-  digitalWrite(PIN_A8, LOW);
-  digitalWrite(PIN_A10, LOW);
-  ledPin = 13;
-  counter = 0;
+  digitalWrite(PIN_A8, LOW); // Turn off buzzer
+  digitalWrite(PIN_A10, LOW); // Turn off green LED
+  ledPin = 13; // Reset ledPin
+  counter = 0; // Reset counter
 
 
   while(counter <= 6) {
 
-    if(counter <= 2) {
+    if(counter <= 2) { // Turn on yellow LED and beep buzzer for 3 seconds
 
       ledPin = 14;
 
@@ -167,8 +169,8 @@ void loop() {
 
   }
 
-  digitalWrite(PIN_A8, LOW);
-  digitalWrite(PIN_A11, LOW);
-  ledPin = 13;
+  digitalWrite(PIN_A8, LOW); // Turn off buzzer
+  digitalWrite(PIN_A11, LOW); // Turn off yellow LED
+  ledPin = 13; // Reset ledPin
 
 }
